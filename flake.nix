@@ -10,6 +10,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
+          formatter = pkgs.nixfmt;
           devShells.default = pkgs.mkShell {
             packages = [ 
               (pkgs.python39.withPackages (ps: [ps.matplotlib]))
