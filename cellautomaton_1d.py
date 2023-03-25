@@ -122,7 +122,7 @@ def stringify_history(generations):
     return res
 
 
-def plot_history(generations, rule):
+def plot_history_1d(generations, rule):
     """Makes matplotlib plot of all generations."""
     fig, ax = plt.subplots()
     plt.axis("off")
@@ -230,4 +230,4 @@ if __name__ == "__main__":
     print("Hello automaton.")
 
     print("History of " + str(rule.NAME) + ": ")
-    plot_history(generations, rule)
+    plot_history_1d(generations, rule)
