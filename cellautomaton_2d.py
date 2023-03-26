@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from matplotlib.animation import FuncAnimation
+
 import numpy as np
 
 from enum import Enum
@@ -25,7 +27,7 @@ class Cell(Enum):
 
 
 class Rule2D:
-    """Base class for 1D rules."""
+    """Base class for 2D rules."""
 
     NAME = ""
 
@@ -201,17 +203,57 @@ def plot_history_2d(generations, rule, page_size):
     plt.show()
 
 
+def animate_history_2d(generations, rule):
+    """Makes matplotlib animation from generations."""
+
+    fig, ax = plt.subplots()
+    ax.axis("off")
+
+    def _animation_frame(generation_idx):
+        """Helper to generate a single frame."""
+
+        generation = generations[generation_idx]
+
+        data = generation.data
+        n_rows = data.shape[0]
+        n_columns = data.shape[1]
+
+        ax.clear()
+        ax.axis("off")
+        ax.set_xlim([0 - 0.5, n_columns + 0.5])
+        ax.set_ylim([0 - 0.5, n_rows + 0.5])
+        ax.set_title(rule.NAME)
+
+        for column_idx in range(n_columns):
+            for row_idx in range(n_rows):
+                cell = data[row_idx, column_idx]
+                if cell == Cell.ALIVE:
+                    facecolor = "black"
+                else:
+                    facecolor = "white"
+
+                rect = patches.Rectangle(
+                    (column_idx, n_rows - row_idx - 1),
+                    1,
+                    1,
+                    linewidth=1,
+                    edgecolor="green",
+                    facecolor=facecolor,
+                )
+                ax.add_patch(rect)
+
+    ani = FuncAnimation(fig, _animation_frame, frames=(len(generations)))
+    plt.show()
+
+
 if __name__ == "__main__":
     """Run as a script."""
 
-    n_generations = 16
-    n_rows = 23
-    n_columns = 17
     page_size = 16
 
     rule = RuleGameOfLife()
 
-    initial_pattern = np.array(
+    initial_pattern_flower = np.array(
         [
             [Cell.DEAD, Cell.ALIVE, Cell.DEAD],
             [Cell.ALIVE, Cell.DEAD, Cell.ALIVE],
@@ -221,7 +263,17 @@ if __name__ == "__main__":
         ]
     )
 
-    def pad_to_shape(arr, out_shape):
+    initial_pattern_glider = np.array(
+        [
+            [Cell.DEAD, Cell.ALIVE, Cell.DEAD],
+            [Cell.DEAD, Cell.DEAD, Cell.ALIVE],
+            [Cell.ALIVE, Cell.ALIVE, Cell.ALIVE],
+        ]
+    )
+
+    def _pad_to_shape(arr, out_shape):
+        """Helper to pad a pattern to a specific size with pattern
+        in the center."""
         m, n = out_shape
         x, y = arr.shape
         out = np.zeros(out_shape, dtype=Cell)
@@ -230,8 +282,15 @@ if __name__ == "__main__":
         out[mx : mx + x, my : my + y] = arr
         return out
 
-    # select initial state
-    state = State2D(pad_to_shape(initial_pattern, (n_columns, n_rows)))
+    # n_generations = 20
+    # n_rows = 19
+    # n_columns = 17
+    # state = State2D(_pad_to_shape(initial_pattern_flower, (n_columns, n_rows)))
+
+    n_generations = 500
+    n_rows = 11
+    n_columns = 11
+    state = State2D(_pad_to_shape(initial_pattern_glider, (n_columns, n_rows)))
 
     # Compute n_generations generations
     generations = [state]
@@ -241,5 +300,8 @@ if __name__ == "__main__":
 
     print("Hello automaton.")
 
-    print("Plotting history of " + str(rule.NAME))
-    plot_history_2d(generations, rule, page_size)
+    # print("Plotting history of " + str(rule.NAME))
+    # plot_history_2d(generations, rule, page_size)
+
+    print("Animating history of " + str(rule.NAME))
+    animate_history_2d(generations, rule)
