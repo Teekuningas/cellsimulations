@@ -133,10 +133,13 @@ def plot_history_1d(generations, rule):
     # plot the rule patterns
     for pattern_idx, pattern in enumerate(rule.PATTERNS):
         # grouping box
-        group_x = 4 * pattern_idx
+        scaling_factor = 32 / (len(generations[0].data))
+        group_x = (4 * pattern_idx) / scaling_factor
         group_y = len(generations) + 4 - 3
+        group_width = 4 / scaling_factor
+        group_height = 3
         rect = patches.Rectangle(
-            (group_x, group_y), 4, 3, linewidth=1, edgecolor="black", facecolor="none"
+            (group_x, group_y), group_width, group_height, linewidth=1, edgecolor="black", facecolor="none"
         )
         ax.add_patch(rect)
 
@@ -144,8 +147,8 @@ def plot_history_1d(generations, rule):
 
         facecolor = "black" if pattern[0][0] == Cell.ALIVE else "white"
         rect = patches.Rectangle(
-            (group_x + 0.5, group_y + 1.5),
-            1,
+            (group_x + (0.5 / scaling_factor), group_y + 1.5),
+            1 / scaling_factor,
             1,
             linewidth=1,
             edgecolor="green",
@@ -155,8 +158,8 @@ def plot_history_1d(generations, rule):
 
         facecolor = "black" if pattern[0][1] == Cell.ALIVE else "white"
         rect = patches.Rectangle(
-            (group_x + 1.5, group_y + 1.5),
-            1,
+            (group_x + (1.5 / scaling_factor), group_y + 1.5),
+            1 / scaling_factor,
             1,
             linewidth=1,
             edgecolor="green",
@@ -166,8 +169,8 @@ def plot_history_1d(generations, rule):
 
         facecolor = "black" if pattern[0][2] == Cell.ALIVE else "white"
         rect = patches.Rectangle(
-            (group_x + 2.5, group_y + 1.5),
-            1,
+            (group_x + (2.5 / scaling_factor), group_y + 1.5),
+            1 / scaling_factor,
             1,
             linewidth=1,
             edgecolor="green",
@@ -177,8 +180,8 @@ def plot_history_1d(generations, rule):
 
         facecolor = "black" if pattern[1] == Cell.ALIVE else "white"
         rect = patches.Rectangle(
-            (group_x + 1.5, group_y + 0.5),
-            1,
+            (group_x + (1.5 / scaling_factor), group_y + 0.5),
+            1 / scaling_factor,
             1,
             linewidth=1,
             edgecolor="green",
@@ -209,8 +212,13 @@ def plot_history_1d(generations, rule):
 if __name__ == "__main__":
     """Run as a script."""
 
-    n_generations = 50
-    n_cells = 101
+    # # Real automaton
+    # n_generations = 50
+    # n_cells = 101
+
+    # Exercise
+    n_generations = 20
+    n_cells = 21
 
     rule = Rule105()
 
@@ -223,11 +231,22 @@ if __name__ == "__main__":
 
     # Compute n_generations generations
     generations = [state]
+
+    # # Real automaton
+    # for idx in range(n_generations - 1):
+    #     state = rule.apply(state)
+    #     generations.append(state)
+
+    # Exercise sheet
     for idx in range(n_generations - 1):
-        state = rule.apply(state)
+        state = State1D(
+            n_cells * [Cell.DEAD]
+        )
         generations.append(state)
+
 
     print("Hello automaton.")
 
     print("History of " + str(rule.NAME) + ": ")
     plot_history_1d(generations, rule)
+
