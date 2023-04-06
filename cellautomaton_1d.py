@@ -35,7 +35,7 @@ class Rule1D:
             if idx == 0:
                 neighbourhood = [data[-1], data[0], data[1]]
             elif idx == len(data) - 1:
-                neighbourhood = [data[-2], data[-1], data[1]]
+                neighbourhood = [data[-2], data[-1], data[0]]
             # Otherwise pick the neighbourhood straightforwardly
             else:
                 neighbourhood = [data[idx - 1], data[idx], data[idx + 1]]
@@ -65,6 +65,23 @@ class Rule1(Rule1D):
         ([Cell.DEAD, Cell.ALIVE, Cell.DEAD], Cell.DEAD),
         ([Cell.DEAD, Cell.DEAD, Cell.ALIVE], Cell.DEAD),
         ([Cell.DEAD, Cell.DEAD, Cell.DEAD], Cell.ALIVE),
+    ]
+
+
+class Rule30(Rule1D):
+    """Implementation of Rule 30."""
+
+    NAME = "Rule 30"
+
+    PATTERNS = [
+        ([Cell.ALIVE, Cell.ALIVE, Cell.ALIVE], Cell.DEAD),
+        ([Cell.ALIVE, Cell.ALIVE, Cell.DEAD], Cell.DEAD),
+        ([Cell.ALIVE, Cell.DEAD, Cell.ALIVE], Cell.DEAD),
+        ([Cell.ALIVE, Cell.DEAD, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.DEAD], Cell.DEAD),
     ]
 
 
@@ -100,6 +117,75 @@ class Rule105(Rule1D):
         ([Cell.DEAD, Cell.DEAD, Cell.ALIVE], Cell.DEAD),
         ([Cell.DEAD, Cell.DEAD, Cell.DEAD], Cell.ALIVE),
     ]
+
+
+class Rule110(Rule1D):
+    """Implementation of Rule 110."""
+
+    NAME = "Rule 110"
+
+    PATTERNS = [
+        ([Cell.ALIVE, Cell.ALIVE, Cell.ALIVE], Cell.DEAD),
+        ([Cell.ALIVE, Cell.ALIVE, Cell.DEAD], Cell.ALIVE),
+        ([Cell.ALIVE, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.ALIVE, Cell.DEAD, Cell.DEAD], Cell.DEAD),
+        ([Cell.DEAD, Cell.ALIVE, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.DEAD], Cell.DEAD),
+    ]
+
+
+class Rule54(Rule1D):
+    """Implementation of Rule 54."""
+
+    NAME = "Rule 54"
+
+    PATTERNS = [
+        ([Cell.ALIVE, Cell.ALIVE, Cell.ALIVE], Cell.DEAD),
+        ([Cell.ALIVE, Cell.ALIVE, Cell.DEAD], Cell.DEAD),
+        ([Cell.ALIVE, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.ALIVE, Cell.DEAD, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.ALIVE], Cell.DEAD),
+        ([Cell.DEAD, Cell.ALIVE, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.DEAD], Cell.DEAD),
+    ]
+
+
+class Rule122(Rule1D):
+    """Implementation of Rule 122."""
+
+    NAME = "Rule 122"
+
+    PATTERNS = [
+        ([Cell.ALIVE, Cell.ALIVE, Cell.ALIVE], Cell.DEAD),
+        ([Cell.ALIVE, Cell.ALIVE, Cell.DEAD], Cell.ALIVE),
+        ([Cell.ALIVE, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.ALIVE, Cell.DEAD, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.DEAD], Cell.DEAD),
+        ([Cell.DEAD, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.DEAD], Cell.DEAD),
+    ]
+
+
+class Rule62(Rule1D):
+    """Implementation of Rule 62."""
+
+    NAME = "Rule 62"
+
+    PATTERNS = [
+        ([Cell.ALIVE, Cell.ALIVE, Cell.ALIVE], Cell.DEAD),
+        ([Cell.ALIVE, Cell.ALIVE, Cell.DEAD], Cell.DEAD),
+        ([Cell.ALIVE, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.ALIVE, Cell.DEAD, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.ALIVE, Cell.DEAD], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.ALIVE], Cell.ALIVE),
+        ([Cell.DEAD, Cell.DEAD, Cell.DEAD], Cell.DEAD),
+    ]
+
 
 
 def stringify_state(state):
@@ -206,7 +292,7 @@ def plot_history_1d(generations, rule):
                 facecolor=facecolor,
             )
             ax.add_patch(rect)
-    plt.show()
+    return fig
 
 
 if __name__ == "__main__":
@@ -217,10 +303,16 @@ if __name__ == "__main__":
     # n_cells = 101
 
     # Exercise
-    n_generations = 20
-    n_cells = 21
+    n_generations = 16
+    n_cells = 31
 
-    rule = Rule105()
+    # rule = Rule18()
+    # rule = Rule30()
+    # rule = Rule54()
+    # rule = Rule62()
+    rule = Rule122()
+    ## rule = Rule105()
+    ## rule = Rule110()
 
     # select initial state
     state = State1D(
@@ -232,21 +324,24 @@ if __name__ == "__main__":
     # Compute n_generations generations
     generations = [state]
 
-    # # Real automaton
-    # for idx in range(n_generations - 1):
-    #     state = rule.apply(state)
-    #     generations.append(state)
-
-    # Exercise sheet
+    # Real automaton
     for idx in range(n_generations - 1):
-        state = State1D(
-            n_cells * [Cell.DEAD]
-        )
+        state = rule.apply(state)
         generations.append(state)
 
+    # # Exercise sheet
+    # for idx in range(n_generations - 1):
+    #     state = State1D(
+    #         n_cells * [Cell.DEAD]
+    #     )
+    #     generations.append(state)
 
     print("Hello automaton.")
 
     print("History of " + str(rule.NAME) + ": ")
-    plot_history_1d(generations, rule)
+    name = rule.NAME.lower().replace(' ', '_')
+    fig = plot_history_1d(generations, rule)
+    plt.show()
+    # fig.set_size_inches(11.69,8.27)
+    fig.savefig(f"output_exercise/{name}.pdf")
 
