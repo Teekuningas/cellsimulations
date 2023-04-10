@@ -326,22 +326,40 @@ if __name__ == "__main__":
 
     rule = RuleSimulation()
 
-    initial_pattern = np.array(
-        [
-            [Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL, Cell.WALL,  Cell.WALL,  Cell.WALL, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.ALIVE, Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.ALIVE, Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.DEAD,  Cell.DEAD,  Cell.DEAD, Cell.WALL],
-            [Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL,  Cell.WALL, Cell.WALL,  Cell.WALL,  Cell.WALL, Cell.WALL],
-        ]
-    )
+    initial_pattern_str = """
+        wwwwwwwwwwwwwwwwwwwwwwww
+        woooooooooooooooooooooow
+        woooooooooooooooooxoooow
+        wooxoooooooxooooooooooow
+        woooooooooooooooooooooow
+        woooooooxoooooooooooooow
+        woooooooooooooooooooooow
+        wooooxooooooooxoooooooow
+        woooooooooooooooooooooow
+        woooooooooooooooooxoooow
+        woooooooooooooooooooooow
+        wooooooooooxooooooooooow
+        woooooooooooooooooxoooow
+        woooooooxoooooooooooooow
+        wooooxooooooooooooooooow
+        woooooooooooooooxoooooow
+        woooooooooooooooooooooow
+        wwwwwwwwwwwwwwwwwwwwwwww
+    """
+
+    initial_pattern = []
+    for row in initial_pattern_str.split('\n'):
+        rowvals = []
+        for letter in row.strip():
+            if letter == 'w':
+                rowvals.append(Cell.WALL)
+            if letter == 'o':
+                rowvals.append(Cell.DEAD)
+            if letter == 'x':
+                rowvals.append(Cell.ALIVE)
+        if rowvals:
+            initial_pattern.append(rowvals)
+    initial_pattern = np.array(initial_pattern, dtype=Cell)
 
     n_generations = 100
     state = State2D(initial_pattern)
