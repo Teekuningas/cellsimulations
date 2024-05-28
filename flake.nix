@@ -9,8 +9,10 @@
       in {
         formatter = pkgs.nixfmt;
         devShells.default = pkgs.mkShell {
-          packages =
-            [ (pkgs.python39.withPackages (ps: [ ps.matplotlib ps.black ])) ];
+          packages = with pkgs; [
+            (python39.withPackages (ps: [ ps.matplotlib ps.black ]))
+            gcc
+          ];
         };
       });
 }

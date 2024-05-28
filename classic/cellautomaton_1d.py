@@ -1,3 +1,5 @@
+import os
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
@@ -343,5 +345,11 @@ if __name__ == "__main__":
     fig = plot_history_1d(generations, rule)
     plt.show()
     # fig.set_size_inches(11.69,8.27)
-    fig.savefig(f"output_exercise/{name}.pdf")
+
+    try:
+        os.makedirs("output")
+    except FileExistsError:
+        pass
+
+    fig.savefig(f"output/{name}.pdf")
 

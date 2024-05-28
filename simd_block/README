@@ -1,0 +1,6 @@
+# c experiment
+
+The following can be used to convert .cc file to a .so file:
+```
+gcc -shared -fPIC -o block_automaton_c.so block_automaton_c.c -lm
+```
